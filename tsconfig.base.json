@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@amdb/auth": ["apps/amdb/src/libs/shared/auth/src/index.ts"],
+      "@amdb/landing": ["apps/amdb/src/libs/landing/src/index.ts"],
+      "@amdb/login": ["apps/amdb/src/libs/login/src/index.ts"],
+      "@amdb/signup": ["apps/amdb/src/libs/signup/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

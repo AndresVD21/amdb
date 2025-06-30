@@ -1,0 +1,34 @@
+{
+  "name": "amdb-back",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/amdb-back/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "continuous": true,
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "amdb-back:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "amdb-back:build:development"
+        },
+        "production": {
+          "buildTarget": "amdb-back:build:production"
+        }
+      }
+    },
+    "init-db": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "psql -U postgres -d postgres -f ./database/init.sql"
+      }
+    }
+  }
+}
