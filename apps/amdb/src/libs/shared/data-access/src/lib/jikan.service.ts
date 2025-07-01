@@ -14,9 +14,10 @@ export class JikanService {
   getTopAnime() {
     return this.http.get<{ data: Anime[] }>(`${this.API_URL}/top/anime`, {
       params: {
-        type: 'tv',
-        filter: 'airing',
-        limit: 8
+        // type: 'tv',
+        filter: 'bypopularity',
+        limit: 8,
+        sfw: true
       }
     });
   }
@@ -25,10 +26,14 @@ export class JikanService {
     return this.http.get<{ data: Anime[] }>(`${this.API_URL}/top/manga`, {
       params: {
         type: 'manga',
-        filter: 'publishing',
+        filter: 'bypopularity',
         limit: 8
       }
     });
+  }
+
+  getDetailsById(id: number, type: string) {
+    return this.http.get<{ data: Anime }>(`${this.API_URL}/${type}/${id}`);
   }
 
 }

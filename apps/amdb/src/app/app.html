@@ -1,1 +1,8 @@
-<router-outlet></router-outlet>
+<!-- Navigation Bar -->
+<!-- Show navigation only when not on login/signup pages -->
+<lib-navbar *ngIf="showNavigation"></lib-navbar>
+
+<!-- Main content -->
+<div [class]="showNavigation ? '' : 'min-h-screen'">
+  <router-outlet></router-outlet>
+</div>

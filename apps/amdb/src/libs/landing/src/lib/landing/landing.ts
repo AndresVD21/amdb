@@ -1,15 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
-import { Heart, Search, Star, TrendingUp, Users, BookOpen, Play, Filter, Grid, List, LogOut, User, Settings, Bell } from 'lucide-angular';
+import { Heart, Search, Star, TrendingUp, Users, BookOpen, Play, Grid, List } from 'lucide-angular';
 import { AuthService } from '@amdb/auth';
 import { Router } from '@angular/router';
 import { JikanService, Anime } from '@amdb/data-access';
 import { Card } from './card/card';
+import { Footer } from '@amdb/components';
 
 @Component({
   selector: 'lib-landing',
-  imports: [CommonModule, LucideAngularModule, Card],
+  imports: [CommonModule, LucideAngularModule, Card, Footer],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
@@ -30,20 +31,11 @@ export class Landing implements OnInit {
   usersIcon = Users;
   bookOpenIcon = BookOpen;
   playIcon = Play;
-  filterIcon = Filter;
   gridIcon = Grid;
   listIcon = List;
-  logOutIcon = LogOut;
-  userIcon = User;
-  settingsIcon = Settings;
-  bellIcon = Bell;
 
   topAnime: Anime[] = [];
   topManga: Anime[] = [];
-
-  toggleUserMenu(): void {
-    this.showUserMenu = !this.showUserMenu;
-  }
 
   setViewMode(mode: 'grid' | 'list'): void {
     this.viewMode = mode;

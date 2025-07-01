@@ -15,4 +15,9 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
     loadComponent: () => import('@amdb/landing').then((m) => m.Landing),
   },
+  {
+    path: 'details/:type/:id',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('@amdb/details').then((m) => m.Details),
+  },
 ];

@@ -1,14 +1,12 @@
+export interface AnimeImage {
+  image_url: string;
+  small_image_url: string;
+  large_image_url: string;
+}
+
 export interface AnimeImages {
-  jpg: {
-    image_url: string;
-    small_image_url: string;
-    large_image_url: string;
-  };
-  webp: {
-    image_url: string;
-    small_image_url: string;
-    large_image_url: string;
-  };
+  jpg: AnimeImage;
+  webp: AnimeImage;
 }
 
 export interface AnimeTitle {
@@ -16,20 +14,18 @@ export interface AnimeTitle {
   title: string;
 }
 
-export interface AnimeAired {
+export interface TimeProps {
+  day: number | null;
+  month: number | null;
+  year: number | null;
+}
+
+export interface TimePeriod {
   from: string;
   to: string | null;
   prop: {
-    from: {
-      day: number;
-      month: number;
-      year: number;
-    };
-    to: {
-      day: number | null;
-      month: number | null;
-      year: number | null;
-    };
+    from: TimeProps;
+    to: TimeProps;
   };
   string: string;
 }
@@ -41,14 +37,29 @@ export interface AnimeBroadcast {
   string: string;
 }
 
-export interface AnimeProducer {
+export interface AnimeTrailer {
+  youtube_id?: string;
+  url?: string;
+  embed_url?: string;
+  images?: TrailerImages;
+}
+
+export interface TrailerImages {
+  image_url?: string;
+  small_image_url?: string;
+  medium_image_url?: string;
+  large_image_url?: string;
+  maximum_image_url?: string;
+}
+
+export interface Creator {
   mal_id: number;
   type: string;
   name: string;
   url: string;
 }
 
-export interface AnimeGenre {
+export interface Genre {
   mal_id: number;
   type: string;
   name: string;
@@ -62,17 +73,17 @@ export class Anime {
   approved!: boolean;
   titles!: AnimeTitle[];
   title!: string;
-  title_english!: string | null;
-  title_japanese!: string;
+  title_english?: string;
+  title_japanese?: string;
   title_synonyms!: string[];
   type!: string;
-  source!: string;
-  episodes!: number | null;
+  source?: string;
+  episodes?: number;
   status!: string;
-  airing!: boolean;
-  aired!: AnimeAired;
-  duration!: string;
-  rating!: string;
+  airing?: boolean;
+  aired?: TimePeriod;
+  duration?: string;
+  rating?: string;
   score!: number;
   scored_by!: number;
   rank!: number;
@@ -80,17 +91,28 @@ export class Anime {
   members!: number;
   favorites!: number;
   synopsis!: string;
-  background!: string;
-  season!: string;
-  year!: number;
-  broadcast!: AnimeBroadcast;
-  producers!: AnimeProducer[];
-  licensors!: AnimeProducer[];
-  studios!: AnimeProducer[];
-  genres!: AnimeGenre[];
-  explicit_genres!: AnimeGenre[];
-  themes!: AnimeGenre[];
-  demographics!: AnimeGenre[];
+  background?: string;
+  season?: string;
+  year?: number;
+  broadcast?: AnimeBroadcast;
+  producers?: Creator[];
+  licensors?: Creator[];
+  studios?: Creator[];
+  genres!: Genre[];
+  explicit_genres!: Genre[];
+  themes!: Genre[];
+  demographics!: Genre[];
+
+  // Manga specific fields
+  chapters?: number | null;
+  volumes?: number | null;
+  publishing?: boolean;
+  published?: TimePeriod;
+  authors?: Creator[];
+  serializations?: Creator[];
+
+  // Anime specific fields
+  trailer?: AnimeTrailer;
 
   constructor(data: Partial<Anime> = {}) {
     Object.assign(this, data);

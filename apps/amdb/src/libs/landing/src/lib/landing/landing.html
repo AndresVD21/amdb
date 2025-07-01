@@ -1,138 +1,32 @@
-<!-- Navigation Bar -->
-<nav
-  class="bg-gray-900/95 backdrop-blur-lg border-b border-gray-800 sticky top-0 z-50"
->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
-      <!-- Logo and Brand -->
-      <div class="flex items-center space-x-4">
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-800 rounded-xl flex items-center justify-center"
-          >
-            <img src="/logo_tiny_white.png" alt="AMDB Logo" />
-          </div>
-          <div>
-            <h1 class="text-xl font-bold text-white">AMDB</h1>
-            <p class="text-xs text-gray-400">Your Anime Universe</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Search Bar -->
-      <div class="flex-1 max-w-2xl mx-8">
-        <div class="relative">
-          <lucide-icon
-            [img]="searchIcon"
-            class="absolute left-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-          ></lucide-icon>
-          <input
-            type="text"
-            placeholder="Search anime, characters, genres..."
-            class="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent transition-all duration-200"
-          />
-        </div>
-      </div>
-
-      <!-- User Menu -->
-      <div class="flex items-center space-x-4">
-        <!-- Notifications -->
-        <button
-          class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-all duration-200"
-        >
-          <lucide-icon [img]="bellIcon" class="w-5 h-5"></lucide-icon>
-        </button>
-
-        <!-- Settings -->
-        <button
-          class="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-all duration-200"
-        >
-          <lucide-icon [img]="settingsIcon" class="w-5 h-5"></lucide-icon>
-        </button>
-
-        <!-- User Profile Dropdown -->
-        <button
-          class="relative"
-          (click)="toggleUserMenu()"
-          [ariaHasPopup]="true"
-          [ariaExpanded]="showUserMenu"
-        >
-          <button
-            class="flex items-center space-x-2 p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-all duration-200"
-          >
-            <lucide-icon [img]="userIcon" class="w-5 h-5"></lucide-icon>
-            <span class="text-sm font-medium">User</span>
-          </button>
-
-          <!-- Dropdown Menu -->
-          <div
-            *ngIf="showUserMenu"
-            class="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-xl shadow-xl z-50"
-            [attr.aria-hidden]="!showUserMenu"
-          >
-            <div class="py-2">
-              <button
-                class="w-full px-4 py-2 text-left text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2"
-              >
-                <lucide-icon [img]="userIcon" class="w-4 h-4"></lucide-icon>
-                <span>Profile</span>
-              </button>
-              <button
-                class="w-full px-4 py-2 text-left text-gray-300 hover:text-white hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2"
-              >
-                <lucide-icon [img]="settingsIcon" class="w-4 h-4"></lucide-icon>
-                <span>Settings</span>
-              </button>
-              <hr class="border-gray-700 my-2" />
-              <button
-                (click)="logout()"
-                class="w-full px-4 py-2 text-left text-red-400 hover:text-red-300 hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-2"
-              >
-                <lucide-icon [img]="logOutIcon" class="w-4 h-4"></lucide-icon>
-                <span>Logout</span>
-              </button>
-            </div>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-</nav>
-
 <!-- Main Content -->
 <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
   <!-- Hero Section -->
-  <div class="relative overflow-hidden">
-    <div
-      class="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-gray-800/90"
-    ></div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-      <div class="text-center">
-        <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">
-          Welcome to
-          <span
-            class="bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent"
-          >
-            AMDB
-          </span>
-        </h1>
-        <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-          Discover, track, and explore your favorite anime series. Join millions
-          of fans in the ultimate anime database experience.
-        </p>
-        <!-- <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            class="px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105"
-          >
-            Explore Anime
-          </button>
-          <button
-            class="px-8 py-4 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200"
-          >
-            My Watchlist
-          </button>
-        </div> -->
-      </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center">
+      <h1 class="text-5xl md:text-7xl font-bold text-white mb-6">
+        Welcome to
+        <span
+          class="bg-gradient-to-r from-gray-400 to-gray-600 bg-clip-text text-transparent"
+        >
+          AMDB
+        </span>
+      </h1>
+      <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
+        Discover, track, and explore your favorite anime series. Join millions
+        of fans in the ultimate anime database experience.
+      </p>
+      <!-- <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          class="px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-600 hover:to-gray-800 text-white font-semibold rounded-xl shadow-lg transform transition-all duration-200 hover:scale-105"
+        >
+          Explore Anime
+        </button>
+        <button
+          class="px-8 py-4 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-200"
+        >
+          My Watchlist
+        </button>
+      </div> -->
     </div>
   </div>
 
@@ -209,129 +103,5 @@
       </button>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900/50 border-t border-gray-800 mt-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div>
-          <div class="flex items-center space-x-3 mb-4">
-            <div
-              class="w-10 h-10 bg-gradient-to-r from-gray-600 to-gray-800 rounded-xl flex items-center justify-center"
-            >
-              <img src="/logo_tiny_white.png" alt="AMDB Logo" />
-            </div>
-            <span class="text-xl font-bold text-white">AMDB</span>
-          </div>
-          <p class="text-gray-400 text-sm">
-            Your ultimate destination for anime discovery and tracking.
-          </p>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-4">Discover</h4>
-          <ul class="space-y-2 text-gray-400 text-sm">
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Popular Anime</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >New Releases</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Top Rated</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Genres</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-4">Community</h4>
-          <ul class="space-y-2 text-gray-400 text-sm">
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Forums</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Reviews</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Recommendations</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Lists</a
-              >
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-4">Support</h4>
-          <ul class="space-y-2 text-gray-400 text-sm">
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Help Center</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Contact Us</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Privacy Policy</a
-              >
-            </li>
-            <li>
-              <a
-                href="#"
-                class="hover:text-white transition-colors duration-200"
-                >Terms of Service</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="border-t border-gray-800 mt-8 pt-8 text-center">
-        <p class="text-gray-400 text-sm">
-          &copy; 2025 AMDB. All rights reserved.
-        </p>
-      </div>
-    </div>
-  </footer>
+  <lib-footer></lib-footer>
 </div>
