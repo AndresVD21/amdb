@@ -16,6 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@amdb/auth": ["apps/amdb/src/libs/shared/auth/src/index.ts"],
+      "@amdb/components": ["apps/amdb/src/libs/shared/components/src/index.ts"],
+      "@amdb/data-access": [
+        "apps/amdb/src/libs/shared/data-access/src/index.ts"
+      ],
       "@amdb/landing": ["apps/amdb/src/libs/landing/src/index.ts"],
       "@amdb/login": ["apps/amdb/src/libs/login/src/index.ts"],
       "@amdb/signup": ["apps/amdb/src/libs/signup/src/index.ts"]
