@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
   login(email: string, password: string) {
-    return this.http.post<{ accessToken: string }>(`${this.API}/auth/login`, { email, password }, {
+    return this.http.post<{ accessToken: string, name: string }>(`${this.API}/auth/login`, { email, password }, {
       withCredentials: true
     });
   }
@@ -37,11 +37,18 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return this.accessToken;
+    const token = this.accessToken;
+    return token;
+  }
+
+  getName(): string | null {
+    const name = localStorage.getItem('name');
+    return name;
   }
 
   private loadToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    return token;
   }
 
   isLoggedIn(): boolean {

@@ -23,6 +23,7 @@
       "@amdb/details": ["apps/amdb/src/libs/details/src/index.ts"],
       "@amdb/landing": ["apps/amdb/src/libs/landing/src/index.ts"],
       "@amdb/login": ["apps/amdb/src/libs/login/src/index.ts"],
+      "@amdb/my-list": ["apps/amdb/src/libs/my-list/src/index.ts"],
       "@amdb/signup": ["apps/amdb/src/libs/signup/src/index.ts"]
     }
   },

@@ -1,0 +1,405 @@
+// My List component SCSS
+
+// Variables
+$glass-bg: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.2);
+$transition-duration: 0.2s;
+
+// Mixins
+@mixin glass-effect {
+  backdrop-filter: blur(16px);
+  background: $glass-bg;
+  border: 1px solid $glass-border;
+}
+
+@mixin smooth-transition {
+  transition: all $transition-duration ease-in-out;
+}
+
+@mixin hover-scale {
+  @include smooth-transition;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+@mixin hover-lift {
+  @include smooth-transition;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Component styles
+.my-list-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #000000 100%);
+}
+
+// Header section
+.header-section {
+  .back-button {
+    @include glass-effect;
+    @include smooth-transition;
+    border-radius: 0.5rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .title-section {
+    .main-title {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: white;
+
+      .title-icon {
+        color: #a855f7;
+      }
+    }
+
+    .subtitle {
+      color: #d1d5db;
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+// Stats section
+.stats-section {
+  .stat-card {
+    @include glass-effect;
+    @include hover-lift;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .stat-label {
+      color: #d1d5db;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Filter and sort section
+.filter-sort-section {
+  .filter-buttons {
+    .filter-button {
+      @include smooth-transition;
+      border-radius: 0.5rem;
+      font-weight: 500;
+
+      &.active {
+        background-color: #7c3aed;
+        color: white;
+      }
+
+      &:not(.active) {
+        @include glass-effect;
+        color: #d1d5db;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+          color: white;
+        }
+      }
+    }
+  }
+
+  .sort-options {
+    .sort-label {
+      color: #9ca3af;
+      font-size: 0.875rem;
+    }
+
+    .sort-button {
+      @include smooth-transition;
+      border-radius: 0.25rem;
+      font-weight: 500;
+      font-size: 0.875rem;
+
+      &.active {
+        background-color: #7c3aed;
+        color: white;
+      }
+
+      &:not(.active) {
+        color: #9ca3af;
+
+        &:hover {
+          color: white;
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// Empty state
+.empty-state {
+  .empty-card {
+    @include glass-effect;
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    max-width: 28rem;
+    margin: 0 auto;
+
+    .empty-icon {
+      color: #9ca3af;
+      margin: 0 auto 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+      color: #d1d5db;
+      margin-bottom: 1.5rem;
+    }
+
+    .discover-button {
+      @include smooth-transition;
+      background-color: #7c3aed;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+
+      &:hover {
+        background-color: #6d28d9;
+      }
+    }
+  }
+}
+
+// List content
+.list-content {
+  .status-section {
+    .section-header {
+      .status-indicator {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .section-icon {
+        color: #d1d5db;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: white;
+      }
+
+      .item-count {
+        color: #9ca3af;
+      }
+    }
+
+    .items-grid {
+      .list-item {
+        @include glass-effect;
+        @include hover-scale;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        cursor: pointer;
+
+        &:hover {
+          border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .item-image {
+          height: 12rem;
+          background: linear-gradient(135deg, #7c3aed, #ec4899);
+          position: relative;
+          overflow: hidden;
+
+          .image-overlay {
+            @include smooth-transition;
+            background: rgba(0, 0, 0, 0.2);
+
+            &.hover-overlay {
+              background: rgba(0, 0, 0, 0.1);
+            }
+          }
+
+          .type-badge {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            text-transform: capitalize;
+          }
+
+          .status-indicator {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+          }
+
+          .quick-actions {
+            @include smooth-transition;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+
+            &.visible {
+              opacity: 1;
+            }
+
+            .action-button {
+              @include smooth-transition;
+              border-radius: 0.5rem;
+
+              &.remove-button {
+                background-color: #dc2626;
+
+                &:hover {
+                  background-color: #b91c1c;
+                }
+              }
+            }
+          }
+        }
+
+        .item-content {
+          padding: 1rem;
+
+          .item-title {
+            @include smooth-transition;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.25rem;
+
+            &.hover-title {
+              color: #c4b5fd;
+            }
+          }
+
+          .item-date {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+          }
+
+          .item-meta {
+            .meta-row {
+              .status-info {
+                .status-icon {
+                  color: #9ca3af;
+                }
+
+                .status-label {
+                  color: #9ca3af;
+                  font-size: 0.75rem;
+                  text-transform: capitalize;
+                }
+              }
+
+              .score-info {
+                .score-icon {
+                  color: #fbbf24;
+                }
+
+                .score-value {
+                  color: white;
+                  font-size: 0.75rem;
+                }
+              }
+            }
+          }
+
+          .progress-section {
+            margin-top: 0.5rem;
+
+            .progress-header {
+              .progress-label {
+                color: #9ca3af;
+                font-size: 0.75rem;
+              }
+
+              .progress-value {
+                color: #9ca3af;
+                font-size: 0.75rem;
+              }
+            }
+
+            .progress-bar {
+              background-color: #374151;
+              border-radius: 9999px;
+              height: 0.25rem;
+
+              .progress-fill {
+                @include smooth-transition;
+                background-color: #7c3aed;
+                height: 0.25rem;
+                border-radius: 9999px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .filter-sort-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stats-section {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .list-content {
+    .items-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-section {
+    .stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .list-content {
+    .items-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .filter-sort-section {
+    .filter-buttons {
+      flex-wrap: wrap;
+    }
+
+    .sort-options {
+      flex-wrap: wrap;
+    }
+  }
+}

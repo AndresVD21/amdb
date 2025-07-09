@@ -1,0 +1,61 @@
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<a
+  class="block bg-white/10 backdrop-blur-lg rounded-xl overflow-hidden border border-white/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer group"
+  (click)="navigateToItem(item)"
+  (keydown.enter)="navigateToItem(item)"
+>
+  <!-- Placeholder Image -->
+  <div
+    class="h-48 bg-gradient-to-br from-indigo-600 to-purple-600 relative overflow-hidden"
+  >
+    <img
+      [src]="item.image_url"
+      [alt]="item.title"
+      class="absolute inset-0 w-full h-full object-cover"
+      onerror="this.style.display='none'"
+    />
+    <div
+      class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"
+    ></div>
+
+    <!-- Type Badge -->
+    <div class="absolute top-2 right-2">
+      <span
+        class="bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full capitalize"
+      >
+        {{ item.type }}
+      </span>
+    </div>
+
+    <!-- Status Indicator -->
+    <div class="absolute bottom-2 left-2" *ngIf="statusOption">
+      <div class="w-3 h-3 rounded-full" [class]="statusOption.color"></div>
+    </div>
+
+    <!-- Quick Actions (shown on hover) -->
+    <div
+      class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-2"
+    >
+      <button
+        (click)="removeFromList($event)"
+        class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
+        title="Remove from list"
+      >
+        <lucide-icon [img]="xCircleIcon" class="w-4 h-4"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Info -->
+  <div class="p-4">
+    <h3 class="font-bold text-white mb-1 line-clamp-2 group-hover:text-indigo-300 transition-colors">
+      {{ item.title }}
+    </h3>
+
+    <!-- Status and Type -->
+    <div class="flex items-center justify-between">
+      <span class="text-xs text-indigo-300 uppercase tracking-wide">{{ item.type }}</span>
+      <span class="text-xs text-indigo-200 capitalize">{{ item.status }}</span>
+    </div>
+  </div>
+</a>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { inject } from '@angular/core';
 import { AuthService } from '@amdb/auth';
 import { Router, RouterModule } from '@angular/router';
-import { LogOut, User, Settings, Bell, Search } from 'lucide-angular';
+import { LogOut, User, Settings, Bell, Search, Star } from 'lucide-angular';
 import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
@@ -21,8 +21,11 @@ export class Navbar {
   settingsIcon = Settings;
   bellIcon = Bell;
   searchIcon = Search;
+  starIcon = Star;
 
   showUserMenu = false;
+
+  name = this.auth.getName();
 
   toggleUserMenu(): void {
     this.showUserMenu = !this.showUserMenu;

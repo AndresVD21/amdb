@@ -2,11 +2,11 @@ import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Play, BookOpen, Star } from 'lucide-angular';
 import { Anime } from '@amdb/data-access';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'lib-card',
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RouterModule],
   templateUrl: './card.html',
   styleUrl: './card.scss',
 })

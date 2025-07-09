@@ -4,9 +4,10 @@ import { LucideAngularModule } from 'lucide-angular';
 import { Navbar } from '@amdb/components';
 import { filter } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Footer } from '@amdb/components';
 
 @Component({
-  imports: [RouterModule, LucideAngularModule, Navbar, CommonModule],
+  imports: [RouterModule, LucideAngularModule, Navbar, Footer, CommonModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',

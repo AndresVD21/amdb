@@ -1,16 +1,29 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { pool } from '../db';
 
+interface TokenPayload extends JwtPayload {
+  id: number;
+  email: string;
+  name: string;
+}
+
+interface User extends TokenPayload {
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
+// TODO: move to environment variables
 const ACCESS_TOKEN_SECRET = 'skoll';
 const REFRESH_TOKEN_SECRET = 'hati';
 
-const generateAccessToken = (user: any) =>
-  jwt.sign({ id: user.id, email: user.email }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+const generateAccessToken = (user: User) =>
+  jwt.sign({ id: user.id, email: user.email, name: user.firstname }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 
-const generateRefreshToken = (user: any) =>
-  jwt.sign({ id: user.id, email: user.email }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+const generateRefreshToken = (user: User) =>
+  jwt.sign({ id: user.id, email: user.email, name: user.firstname }, REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
 export const register = async (req: Request, res: Response) => {
   const { firstName, lastName, email, password } = req.body;
@@ -34,6 +47,8 @@ export const login = async (req: Request, res: Response) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
+  const name = user.firstname;
+
   res
     .cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -41,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
-    .json({ accessToken });
+    .json({ accessToken, name });
 };
 
 export const refresh = (req: Request, res: Response) => {
@@ -49,9 +64,9 @@ export const refresh = (req: Request, res: Response) => {
   if (!token) return res.sendStatus(401);
 
   try {
-    const user = jwt.verify(token, REFRESH_TOKEN_SECRET);
+    const user = jwt.verify(token, REFRESH_TOKEN_SECRET) as User;
     const newAccessToken = generateAccessToken(user);
-    res.json({ accessToken: newAccessToken });
+    res.json({ accessToken: newAccessToken, name: user.firstname });
   } catch {
     res.sendStatus(403);
   }

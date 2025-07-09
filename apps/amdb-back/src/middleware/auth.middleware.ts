@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const ACCESS_TOKEN_SECRET = 'clave_acceso';
+const ACCESS_TOKEN_SECRET = 'skoll';
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;

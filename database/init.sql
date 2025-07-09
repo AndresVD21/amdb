@@ -5,3 +5,12 @@ CREATE TABLE IF NOT EXISTS users (
   email VARCHAR(100) UNIQUE,
   password VARCHAR(255)
 );
+
+CREATE TABLE IF NOT EXISTS favorites (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    mal_id INTEGER NOT NULL,
+    type VARCHAR(50) NOT NULL,  -- 'anime' or 'manga'
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, mal_id)
+);

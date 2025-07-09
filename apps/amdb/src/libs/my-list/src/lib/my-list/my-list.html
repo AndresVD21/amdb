@@ -1,0 +1,175 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<div class="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-fuchsia-900">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center space-x-4">
+        <button
+          (click)="goBack()"
+          class="p-2 bg-white/10 backdrop-blur-lg border border-white/20 text-white hover:bg-indigo-600/20 rounded-lg transition-all duration-200"
+        >
+          <lucide-icon [img]="arrowLeftIcon" class="w-5 h-5"></lucide-icon>
+        </button>
+        <div>
+          <h1 class="text-3xl font-bold text-white flex items-center">
+            <lucide-icon [img]="listIcon" class="w-8 h-8 mr-3"></lucide-icon>
+            My List
+          </h1>
+          <p class="text-indigo-200 mt-1">{{ getListStats().total }} items in your collection</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- List Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().anime }}</div>
+        <div class="text-indigo-200 text-sm">Anime</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().manga }}</div>
+        <div class="text-indigo-200 text-sm">Manga</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().completed }}</div>
+        <div class="text-indigo-200 text-sm">Completed</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().watching + getListStats().reading }}</div>
+        <div class="text-indigo-200 text-sm">Current</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().planToWatch + getListStats().planToRead }}</div>
+        <div class="text-indigo-200 text-sm">Planned</div>
+      </div>
+      <div class="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 text-center">
+        <div class="text-2xl font-bold text-white">{{ getListStats().onHold + getListStats().dropped }}</div>
+        <div class="text-indigo-200 text-sm">Paused</div>
+      </div>
+    </div>
+
+    <!-- Filters and Sorting -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <!-- Filter Buttons -->
+      <div class="flex space-x-2">
+        <button
+          (click)="setActiveFilter('all')"
+          [class]="getFilterButtonClass('all')"
+        >
+          All
+        </button>
+        <button
+          (click)="setActiveFilter('anime')"
+          [class]="getFilterButtonClass('anime')"
+        >
+          Anime
+        </button>
+        <button
+          (click)="setActiveFilter('manga')"
+          [class]="getFilterButtonClass('manga')"
+        >
+          Manga
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredList.length === 0" class="text-center py-16">
+      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-12 border border-white/20 max-w-md mx-auto">
+        <lucide-icon [img]="listIcon" class="w-16 h-16 text-indigo-300 mx-auto mb-4"></lucide-icon>
+        <h3 class="text-xl font-bold text-white mb-2">Your list is empty</h3>
+        <p class="text-indigo-200 mb-6">Start adding anime and manga to track your progress</p>
+        <button
+          (click)="goBack()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+        >
+          Discover Content
+        </button>
+      </div>
+    </div>
+
+    <!-- List Content -->
+    <div *ngIf="filteredList.length > 0" class="space-y-8">
+      <!-- Status-based sections -->
+      <div *ngFor="let statusOption of statusOptions">
+        <div *ngIf="hasItemsInStatus(statusOption.value)">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="w-4 h-4 rounded-full" [class]="statusOption.color"></div>
+            <lucide-icon [img]="getStatusIcon(statusOption.icon)" class="w-5 h-5 text-indigo-300"></lucide-icon>
+            <h2 class="text-xl font-bold text-white">{{ statusOption.label }}</h2>
+            <span class="text-indigo-200">({{ getListByStatus(statusOption.value).length }})</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <lib-list-item
+              *ngFor="let item of getListByStatus(statusOption.value)"
+              [item]="item"
+              [statusOption]="statusOption"
+              (removeFromListEvent)="removeFromList($event)"
+            ></lib-list-item>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unorganized Items -->
+      <div *ngIf="getUnorganizedItems().length > 0">
+        <div class="flex items-center space-x-3 mb-4">
+          <div class="w-4 h-4 rounded-full bg-gray-500"></div>
+          <lucide-icon [img]="listIcon" class="w-5 h-5 text-indigo-300"></lucide-icon>
+          <h2 class="text-xl font-bold text-white">Other</h2>
+          <span class="text-indigo-200">({{ getUnorganizedItems().length }})</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <a
+            *ngFor="let item of getUnorganizedItems()"
+            class="bg-white/10 backdrop-blur-lg rounded-xl overflow-hidden border border-white/20 hover:border-indigo-500/50 transition-all duration-300 transform hover:scale-105 cursor-pointer group"
+            (click)="navigateToItem(item)"
+          >
+            <!-- Placeholder Image -->
+            <div class="h-48 bg-gradient-to-br from-gray-600 to-gray-800 relative overflow-hidden">
+              <img
+                [src]="item.image_url"
+                [alt]="item.title"
+                class="absolute inset-0 w-full h-full object-cover"
+                onerror="this.style.display='none'"
+              />
+              <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all duration-300"></div>
+
+              <!-- Type Badge -->
+              <div class="absolute top-2 right-2">
+                <span class="bg-black/50 text-white text-xs px-2 py-1 rounded-full capitalize">
+                  {{ item.type }}
+                </span>
+              </div>
+
+              <!-- Quick Actions (shown on hover) -->
+              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-2">
+                <button
+                  (click)="removeFromList(item)"
+                  class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
+                  title="Remove from list"
+                >
+                  <lucide-icon [img]="xCircleIcon" class="w-4 h-4"></lucide-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Content Info -->
+            <div class="p-4">
+              <h3 class="font-bold text-white mb-1 line-clamp-2 group-hover:text-indigo-300 transition-colors">
+                {{ item.title }}
+              </h3>
+
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-gray-500 uppercase tracking-wide">{{ item.type }}</span>
+                <span class="text-xs text-indigo-200 capitalize">{{ item.status }}</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

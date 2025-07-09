@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { Heart, Search, Star, TrendingUp, Users, BookOpen, Play, Grid, List } from 'lucide-angular';
 import { AuthService } from '@amdb/auth';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { JikanService, Anime } from '@amdb/data-access';
 import { Card } from './card/card';
-import { Footer } from '@amdb/components';
 
 @Component({
   selector: 'lib-landing',
-  imports: [CommonModule, LucideAngularModule, Card, Footer],
+  imports: [CommonModule, LucideAngularModule, Card, RouterModule],
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })

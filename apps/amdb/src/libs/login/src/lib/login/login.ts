@@ -52,6 +52,7 @@ export class Login {
     this.auth.login(email, password).subscribe({
       next: (response) => {
         this.auth.saveToken(response.accessToken);
+        localStorage.setItem('name', response.name);
         this.isLoading = false;
         this.router.navigate(['/']);
       },
