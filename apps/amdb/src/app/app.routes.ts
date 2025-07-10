@@ -25,4 +25,9 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
     loadComponent: () => import('@amdb/my-list').then((m) => m.MyList),
   },
+  {
+    path: 'view-all/:type',
+    canActivate: [AuthGuard],
+    loadComponent: () => import('@amdb/view-all').then((m) => m.ViewAll),
+  },
 ];

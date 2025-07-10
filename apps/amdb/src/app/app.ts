@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { Navbar } from '@amdb/components';
-import { filter } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Footer } from '@amdb/components';
 
@@ -12,16 +12,18 @@ import { Footer } from '@amdb/components';
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnDestroy {
   protected title = 'amdb';
 
   private router = inject(Router);
 
   showNavigation = true;
 
+  private destroy$ = new Subject<void>();
+
   constructor() {
     this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd), takeUntil(this.destroy$))
       .subscribe((event: NavigationEnd) => {
         // Hide navigation on login and signup pages
         this.showNavigation = !this.isAuthPage(event.url);
@@ -30,5 +32,10 @@ export class App {
 
   private isAuthPage(url: string): boolean {
     return url === '/login' || url === '/signup' || url.startsWith('/login') || url.startsWith('/signup');
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

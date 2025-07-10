@@ -452,18 +452,25 @@
 
           <!-- Trailer Section (only for anime) -->
           <div
-            *ngIf="isAnime() && anime!.trailer?.youtube_id"
+            *ngIf="isAnime() && anime!.trailer?.youtube_id && getTrailerImage()"
             class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6"
           >
             <h2 class="text-2xl font-bold text-white mb-4">Trailer</h2>
-            <div class="aspect-video rounded-xl overflow-hidden">
-              <iframe
-                [src]="getTrailerEmbedUrl()"
-                class="w-full h-full"
-                frameborder="0"
-                allowfullscreen
-              ></iframe>
-            </div>
+            <a
+              [href]="getTrailerUrl()"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block rounded-xl overflow-hidden relative group hover:opacity-90 transition-opacity"
+            >
+              <img
+                [src]="getTrailerImage()"
+                [alt]="anime!.title + ' trailer'"
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                <lucide-icon [img]="playCircleIcon" class="w-16 h-16 text-white"></lucide-icon>
+              </div>
+            </a>
           </div>
 
           <!-- Background Section (if available) -->

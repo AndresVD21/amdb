@@ -1,11 +1,12 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { Heart, Search, Star, TrendingUp, Users, BookOpen, Play, Grid, List } from 'lucide-angular';
 import { AuthService } from '@amdb/auth';
 import { Router, RouterModule } from '@angular/router';
 import { JikanService, Anime } from '@amdb/data-access';
-import { Card } from './card/card';
+import { Card } from '@amdb/components';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-landing',
@@ -13,7 +14,7 @@ import { Card } from './card/card';
   templateUrl: './landing.html',
   styleUrl: './landing.scss',
 })
-export class Landing implements OnInit {
+export class Landing implements OnInit, OnDestroy {
   showUserMenu = false;
   viewMode: 'grid' | 'list' = 'grid';
   activeTab: 'anime' | 'manga' = 'anime';
@@ -21,6 +22,8 @@ export class Landing implements OnInit {
   private auth = inject(AuthService);
   private router = inject(Router);
   private jikan = inject(JikanService);
+
+  private destroy$ = new Subject<void>();
 
   // Lucide icons
   heartIcon = Heart;
@@ -46,7 +49,9 @@ export class Landing implements OnInit {
 
   logout(): void {
 
-    this.auth.logout().subscribe(() => {
+    this.auth.logout()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       this.router.navigate(['/login']);
       this.showUserMenu = false;
     });
@@ -57,15 +62,24 @@ export class Landing implements OnInit {
   }
 
   initTopContent(): void {
-    this.jikan.getTopAnime().subscribe((res) => {
+    this.jikan.getTopAnime()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
       this.topAnime = res.data;
     });
-    this.jikan.getTopManga().subscribe((res) => {
+    this.jikan.getTopManga()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
       this.topManga = res.data;
     });
   }
 
   getActiveContent(): Anime[] {
     return this.activeTab === 'anime' ? this.topAnime : this.topManga;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

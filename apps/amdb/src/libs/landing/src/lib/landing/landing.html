@@ -89,11 +89,12 @@
       <lib-card *ngFor="let item of getActiveContent(); let i = index" [activeTab]="activeTab" [item]="item" [i]="i"></lib-card>
     </div>
     <div class="text-center mt-12">
-      <button
+      <a
+        [routerLink]="['/view-all', activeTab]"
         class="px-8 py-4 bg-white/10 border border-white/20 text-white font-semibold rounded-xl hover:bg-indigo-600/20 transition-all duration-200"
       >
         View All {{ activeTab === 'anime' ? 'Anime' : 'Manga' }}
-      </button>
+      </a>
     </div>
   </div>
 </div>

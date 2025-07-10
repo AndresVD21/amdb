@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Anime } from '@amdb/data-access';
@@ -32,6 +32,7 @@ import {
 import { JikanService } from '@amdb/data-access';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FavoritesService } from '@amdb/data-access';
+import { Subject, takeUntil } from 'rxjs';
 
 interface StatusOption {
   value: string;
@@ -42,12 +43,11 @@ interface StatusOption {
 
 @Component({
   selector: 'lib-details',
-  standalone: true,
   imports: [CommonModule, LucideAngularModule],
   templateUrl: './details.html',
   styleUrl: './details.scss',
 })
-export class Details implements OnInit {
+export class Details implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private jikanService = inject(JikanService);
   private router = inject(Router);
@@ -66,6 +66,7 @@ export class Details implements OnInit {
   usersIcon = Users;
   heartIcon = Heart;
   playIcon = Play;
+  playCircleIcon = PlayCircle;
   share2Icon = Share2;
   bookmarkIcon = Bookmark;
   eyeIcon = Eye;
@@ -78,7 +79,6 @@ export class Details implements OnInit {
   plusIcon = Plus;
   checkIcon = Check;
   xIcon = X;
-  playCircleIcon = PlayCircle;
   checkCircleIcon = CheckCircle;
   pauseIcon = Pause;
   xCircleIcon = XCircle;
@@ -89,6 +89,8 @@ export class Details implements OnInit {
   showStatusDropdown = false;
   statusOptions: StatusOption[] = [];
   currentStatus: StatusOption | null | undefined = null;
+
+  private destroy$ = new Subject<void>();
 
   // Status options for anime
   public animeStatusOptions = [
@@ -113,13 +115,20 @@ export class Details implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params) => {
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((params) => {
       this.animeId = params['id'];
       this.animeType = params['type'];
       this.statusOptions = this.getStatusOptions(this.animeType);
 
       this.getDetails();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getStatusOptions(type: 'anime' | 'manga'): StatusOption[] {
@@ -133,6 +142,17 @@ export class Details implements OnInit {
       );
     }
     return null;
+  }
+
+  getTrailerUrl(): string | null {
+    return this.anime?.trailer?.url || null;
+  }
+
+  getTrailerImage(): SafeResourceUrl | null {
+    if (!this.anime?.trailer?.images?.large_image_url) {
+      return null;
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.anime?.trailer?.images?.large_image_url);
   }
 
   goBack(): void {
@@ -151,6 +171,7 @@ export class Details implements OnInit {
   getDetails(): void {
     this.jikanService
       .getDetailsById(+this.animeId, this.animeType)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((anime) => {
         this.anime = anime.data;
         this.isLoading = false;
@@ -223,19 +244,25 @@ export class Details implements OnInit {
   }
 
   addToFavorites(): void {
-    this.favoritesService.addToFavorites(this.anime!.mal_id, this.animeType).subscribe(() => {
+    this.favoritesService.addToFavorites(this.anime!, this.animeType)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       this.isFavorite = true;
     });
   }
 
   removeFromFavorites(): void {
-    this.favoritesService.removeFromFavorites(this.anime!.mal_id).subscribe(() => {
+    this.favoritesService.removeFromFavorites(this.anime!.mal_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
       this.isFavorite = false;
     });
   }
 
   checkFavorite(): void {
-    this.favoritesService.checkFavorite(this.anime!.mal_id).subscribe((res) => {
+    this.favoritesService.checkFavorite(this.anime!.mal_id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
       this.isFavorite = res.isFavorite;
       this.currentStatus = this.statusOptions.find((option) => option.value === res.status);
     });
@@ -245,19 +272,20 @@ export class Details implements OnInit {
     if (!this.anime) return;
 
     if (this.isFavorite) {
-      this.favoritesService.removeFromFavorites(this.anime.mal_id).subscribe(() => {
+      this.favoritesService.removeFromFavorites(this.anime.mal_id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
         this.isFavorite = false;
         this.currentStatus = undefined;
       });
     } else {
       this.favoritesService
         .addToFavorites(
-          this.anime.mal_id,
+          this.anime,
           this.animeType,
-          'plan-to-watch',
-          this.anime.images.jpg.image_url,
-          this.anime.title
+          'plan-to-watch'
         )
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
           this.isFavorite = true;
           this.currentStatus = this.statusOptions.find(
@@ -300,13 +328,14 @@ export class Details implements OnInit {
     this.currentStatus = this.statusOptions.find((option) => option.value === status);
     this.showStatusDropdown = false;
 
-    this.favoritesService.updateStatus(this.anime.mal_id, status).subscribe({
+    this.favoritesService.updateStatus(this.anime.mal_id, status)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
       next: (response) => {
         console.log('Status updated successfully:', response);
       },
       error: (error) => {
         console.error('Error updating status:', error);
-        // Revert the UI state if the API call fails
         this.currentStatus = this.statusOptions.find((option) => option.value === this.currentStatus?.value);
       }
     });

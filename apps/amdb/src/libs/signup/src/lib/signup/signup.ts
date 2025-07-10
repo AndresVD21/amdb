@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Eye, EyeOff, Mail, Lock, User, Heart, UserPlus, Calendar, Shield } from 'lucide-angular';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '@amdb/auth';
-import { tap } from 'rxjs';
+import { takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-signup',
@@ -13,10 +13,12 @@ import { tap } from 'rxjs';
   templateUrl: './signup.html',
   styleUrl: './signup.scss',
 })
-export class Signup {
+export class Signup implements OnDestroy {
   private fb = inject(FormBuilder);
   private auth = inject(AuthService);
   private router = inject(Router);
+
+  private destroy$ = new Subject<void>();
 
   showPassword = false;
   showConfirmPassword = false;
@@ -40,6 +42,11 @@ export class Signup {
   userPlusIcon = UserPlus;
   calendarIcon = Calendar;
   shieldIcon = Shield;
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
@@ -112,7 +119,9 @@ export class Signup {
       return;
     }
 
-    this.auth.register(firstName, lastName, email, password).subscribe({
+    this.auth.register(firstName, lastName, email, password)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/login']);

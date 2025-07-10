@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Anime } from './anime.model';
 
 export interface FavoriteStatus {
   isFavorite: boolean;
@@ -53,8 +54,8 @@ export class FavoritesService {
     });
   }
 
-  addToFavorites(malId: number, type: string, status?: string, imageUrl?: string, title?: string) {
-    return this.http.post<FavoriteItem>(`${this.API}/favorites`, { malId, type, status, image_url: imageUrl, title }, {
+  addToFavorites(anime: Anime, type: string, status?: string) {
+    return this.http.post<FavoriteItem>(`${this.API}/favorites`, { malId: anime.mal_id, type, status, image_url: anime.images.jpg.image_url, title: anime.title }, {
       withCredentials: true
     });
   }

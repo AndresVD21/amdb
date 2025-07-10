@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { FavoritesService } from '@amdb/data-access';
 import { FavoriteItem, StatusOption } from '@amdb/data-access';
@@ -6,6 +6,7 @@ import { List, ArrowLeft, PlayCircle, CheckCircle, Pause, XCircle, Clock, BookOp
 import { Router } from '@angular/router';
 import { LucideAngularModule } from 'lucide-angular';
 import { ListItem } from './list-item/list-item';
+import { takeUntil, Subject } from 'rxjs';
 
 @Component({
   selector: 'lib-my-list',
@@ -13,10 +14,12 @@ import { ListItem } from './list-item/list-item';
   templateUrl: './my-list.html',
   styleUrl: './my-list.scss',
 })
-export class MyList implements OnInit {
+export class MyList implements OnInit, OnDestroy {
   private favoritesService = inject(FavoritesService);
   private router = inject(Router);
   private location = inject(Location);
+
+  private destroy$ = new Subject<void>();
 
   favorites: FavoriteItem[] = [];
   statusOptions: StatusOption[] = [];
@@ -42,8 +45,15 @@ export class MyList implements OnInit {
     this.getFavorites();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getFavorites(): void {
-    this.favoritesService.getFavorites().subscribe((favorites) => {
+    this.favoritesService.getFavorites()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((favorites) => {
       this.favorites = favorites;
       this.filteredList = this.getFilteredList();
     });

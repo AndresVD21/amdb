@@ -66,6 +66,21 @@ export interface Genre {
   url: string;
 }
 
+export interface FilterGenre extends Genre {
+  count: number;
+}
+
+export interface Pagination {
+  last_visible_page: number;
+  has_next_page: boolean;
+  current_page: number;
+  items: {
+    count: number;
+    total: number;
+    per_page: number;
+  };
+}
+
 export class Anime {
   mal_id!: number;
   url!: string;

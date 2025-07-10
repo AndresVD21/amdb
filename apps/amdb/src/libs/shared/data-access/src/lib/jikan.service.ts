@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Anime } from './anime.model';
+import { Anime, FilterGenre, Pagination } from './anime.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,27 @@ export class JikanService {
 
   getDetailsById(id: number, type: string) {
     return this.http.get<{ data: Anime }>(`${this.API_URL}/${type}/${id}`);
+  }
+
+  getGenres(type: 'anime' | 'manga') {
+    return this.http.get<{ data: FilterGenre[] }>(`${this.API_URL}/genres/${type}`, {
+      params: {
+        filter: 'genres'
+      }
+    });
+  }
+
+  getContentByGenre(type: 'anime' | 'manga', genres: number[], page: number) {
+    return this.http.get<{ data: Anime[], pagination: Pagination }>(`${this.API_URL}/${type}`, {
+      params: {
+        limit: 12,
+        page,
+        genres: genres.join(','),
+        order_by: 'popularity',
+        sort: 'asc',
+        sfw: true
+      }
+    });
   }
 
 }
